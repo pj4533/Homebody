@@ -1,4 +1,4 @@
 Homebody
 ========
 
-Use iBeacons &amp; StatHat to track time spent at home &amp; away from home.
+Use Estimotes to track time spent near an iBeacon and report to StatHat
