@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0A394BB318428152004E705D /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A394BB218428152004E705D /* CoreLocation.framework */; };
+		0ACBC0931842B5B500F262D9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACBC0921842B5B500F262D9 /* SystemConfiguration.framework */; };
+		0ACBC0951842B5BD00F262D9 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ACBC0941842B5BD00F262D9 /* MobileCoreServices.framework */; };
 		0ADAEAE418427FE300D64FF0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADAEAE318427FE300D64FF0 /* Foundation.framework */; };
 		0ADAEAE618427FE300D64FF0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADAEAE518427FE300D64FF0 /* CoreGraphics.framework */; };
 		0ADAEAE818427FE300D64FF0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADAEAE718427FE300D64FF0 /* UIKit.framework */; };
@@ -37,6 +39,9 @@
 
 /* Begin PBXFileReference section */
 		0A394BB218428152004E705D /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0ACBC0911842B30200F262D9 /* SGSAppTokens.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SGSAppTokens.h; sourceTree = "<group>"; };
+		0ACBC0921842B5B500F262D9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0ACBC0941842B5BD00F262D9 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		0ADAEAE018427FE300D64FF0 /* Homebody.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Homebody.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0ADAEAE318427FE300D64FF0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		0ADAEAE518427FE300D64FF0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ACBC0951842B5BD00F262D9 /* MobileCoreServices.framework in Frameworks */,
+				0ACBC0931842B5B500F262D9 /* SystemConfiguration.framework in Frameworks */,
 				0A394BB318428152004E705D /* CoreLocation.framework in Frameworks */,
 				0ADAEAE618427FE300D64FF0 /* CoreGraphics.framework in Frameworks */,
 				0ADAEAE818427FE300D64FF0 /* UIKit.framework in Frameworks */,
@@ -109,6 +116,8 @@
 		0ADAEAE218427FE300D64FF0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0ACBC0941842B5BD00F262D9 /* MobileCoreServices.framework */,
+				0ACBC0921842B5B500F262D9 /* SystemConfiguration.framework */,
 				0A394BB218428152004E705D /* CoreLocation.framework */,
 				0ADAEAE318427FE300D64FF0 /* Foundation.framework */,
 				0ADAEAE518427FE300D64FF0 /* CoreGraphics.framework */,
@@ -122,6 +131,7 @@
 		0ADAEAE918427FE300D64FF0 /* Homebody */ = {
 			isa = PBXGroup;
 			children = (
+				0ACBC0911842B30200F262D9 /* SGSAppTokens.h */,
 				0ADAEAF218427FE300D64FF0 /* SGSAppDelegate.h */,
 				0ADAEAF318427FE300D64FF0 /* SGSAppDelegate.m */,
 				0ADAEAF518427FE300D64FF0 /* Main.storyboard */,
@@ -174,6 +184,7 @@
 				0ADAEADD18427FE300D64FF0 /* Frameworks */,
 				0ADAEADE18427FE300D64FF0 /* Resources */,
 				E617EFECDABC4E0587386204 /* Copy Pods Resources */,
+				0ACBC0901842B2CB00F262D9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -258,6 +269,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0ACBC0901842B2CB00F262D9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "touch Homebody/SGSAppTokens.h";
+		};
 		5EF8B32C17CE4445B27CB79C /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

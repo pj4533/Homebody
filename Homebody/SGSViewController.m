@@ -8,6 +8,8 @@
 
 #import "SGSViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import "AFStatHatClient.h"
+#import "SGSAppTokens.h"
 
 // This is the UUID for all Estimote Beacons
 #define ESTIMOTE_UUID @"B9407F30-F5F8-466E-AFF9-25556B57FE6D"
@@ -146,7 +148,11 @@
         if (self.timeEnteredMultiRegionLocation) {
             NSTimeInterval interval = [self.timeExitedMultiRegionLocation timeIntervalSinceDate:self.timeEnteredMultiRegionLocation];
             
-            
+#ifdef kAPPTOKEN_STATHAT
+            AFStatHatClient* stathat = [[AFStatHatClient alloc] initWithEZKey:kAPPTOKEN_STATHAT];
+            [stathat postEZStat:@"Minutes At Home" withValue:@(interval/60.0)];
+#endif
+
             [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Inside Multiregion: %f", interval/60.0]];
 
             self.timeEnteredMultiRegionLocation = nil;
@@ -156,6 +162,11 @@
         if (self.timeExitedMultiRegionLocation) {
             NSTimeInterval interval = [self.timeEnteredMultiRegionLocation timeIntervalSinceDate:self.timeExitedMultiRegionLocation];
             
+#ifdef kAPPTOKEN_STATHAT
+            AFStatHatClient* stathat = [[AFStatHatClient alloc] initWithEZKey:kAPPTOKEN_STATHAT];
+            [stathat postEZStat:@"Minutes Away From Home" withValue:@(interval/60.0)];
+#endif
+
             [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Outside Multiregion: %f", interval/60.0]];
             
             self.timeExitedMultiRegionLocation = nil;
@@ -189,7 +200,8 @@
                 label.text = @"Outside region";
             }
             
-            //TODO: TEST ONLY
+            //TODO: TEST ONLY - doing this leads to incorrect reported times cause it doesn't fully
+            // encapsulate a time period spent at or away from the multiregion
             [self updateMultiRegionStatus];
         }
     }
