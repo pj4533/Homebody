@@ -8,7 +8,7 @@
 
 #import "SGSViewController.h"
 #import <CoreLocation/CoreLocation.h>
-#import "AFStatHatClient.h"
+#import "AFNetworking.h"
 #import "SGSAppTokens.h"
 
 // This is the UUID for all Estimote Beacons
@@ -149,8 +149,15 @@
             NSTimeInterval interval = [self.timeExitedMultiRegionLocation timeIntervalSinceDate:self.timeEnteredMultiRegionLocation];
             
 #ifdef kAPPTOKEN_STATHAT
-            AFStatHatClient* stathat = [[AFStatHatClient alloc] initWithEZKey:kAPPTOKEN_STATHAT];
-            [stathat postEZStat:@"Minutes At Home" withValue:@(interval/60.0)];
+            NSDictionary *parameters = @{
+                                         @"ezkey": kAPPTOKEN_STATHAT,
+                                         @"stat": @"Minutes At Home",
+                                         @"value": @(interval/60.0)
+                                         };
+            [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
+                                               parameters:parameters
+                                                  success:nil
+                                                  failure:nil];
 #endif
 
             [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Inside Multiregion: %f", interval/60.0]];
@@ -163,8 +170,15 @@
             NSTimeInterval interval = [self.timeEnteredMultiRegionLocation timeIntervalSinceDate:self.timeExitedMultiRegionLocation];
             
 #ifdef kAPPTOKEN_STATHAT
-            AFStatHatClient* stathat = [[AFStatHatClient alloc] initWithEZKey:kAPPTOKEN_STATHAT];
-            [stathat postEZStat:@"Minutes Away From Home" withValue:@(interval/60.0)];
+            NSDictionary *parameters = @{
+                                         @"ezkey": kAPPTOKEN_STATHAT,
+                                         @"stat": @"Minutes Away From Home",
+                                         @"value": @(interval/60.0)
+                                         };
+            [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
+                                               parameters:parameters
+                                                  success:nil
+                                                  failure:nil];
 #endif
 
             [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Outside Multiregion: %f", interval/60.0]];
