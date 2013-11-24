@@ -151,8 +151,8 @@
 #ifdef kAPPTOKEN_STATHAT
             NSDictionary *parameters = @{
                                          @"ezkey": kAPPTOKEN_STATHAT,
-                                         @"stat": @"Minutes At Home",
-                                         @"value": @(interval/60.0)
+                                         @"stat": @"Minutes Spent At Home",
+                                         @"count": @(interval/60.0)
                                          };
             [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
                                                parameters:parameters
@@ -172,8 +172,8 @@
 #ifdef kAPPTOKEN_STATHAT
             NSDictionary *parameters = @{
                                          @"ezkey": kAPPTOKEN_STATHAT,
-                                         @"stat": @"Minutes Away From Home",
-                                         @"value": @(interval/60.0)
+                                         @"stat": @"Minutes Spent Away From Home",
+                                         @"count": @(interval/60.0)
                                          };
             [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
                                                parameters:parameters
