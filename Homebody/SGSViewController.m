@@ -17,6 +17,7 @@
 // This ID can be anything, it is used only to identify the region the app creates
 #define PURPLE_REGION_ID @"com.saygoodnight.homebody.purple.region"
 #define LIGHTBLUE_REGION_ID @"com.saygoodnight.homebody.lightblue.region"
+#define LIGHTGREEN_REGION_ID @"com.saygoodnight.homebody.lightgreen.region"
 
 // These are the major/minor numbers for my purple Estimote.  This lets me only setup a region around one of
 // my Estimotes.  These numbers are editable by using the Estimote Editor app.
@@ -25,6 +26,9 @@
 
 #define LIGHTBLUE_MAJOR 2747
 #define LIGHTBLUE_MINOR 25868
+
+#define LIGHTGREEN_MAJOR 18709
+#define LIGHTGREEN_MINOR 26469
 
 @interface SGSViewController () <CLLocationManagerDelegate>
 
@@ -65,14 +69,20 @@
                           withMinor:LIGHTBLUE_MINOR
                      withIdentifier:LIGHTBLUE_REGION_ID];
     
+    [self setupRegionWithUUIDString:ESTIMOTE_UUID
+                          withMajor:LIGHTGREEN_MAJOR
+                          withMinor:LIGHTGREEN_MINOR
+                     withIdentifier:LIGHTGREEN_REGION_ID];
     
     self.regionsAtThisLocation = @{
                                    PURPLE_REGION_ID: @(CLRegionStateUnknown),
-                                   LIGHTBLUE_REGION_ID: @(CLRegionStateUnknown)
+                                   LIGHTBLUE_REGION_ID: @(CLRegionStateUnknown),
+                                   LIGHTGREEN_REGION_ID: @(CLRegionStateUnknown)
                                    }.mutableCopy;
     
     self.labelsForRegions = @{PURPLE_REGION_ID: self.purpleProximityLabel,
-                              LIGHTBLUE_REGION_ID: self.lightBlueProximityLabel
+                              LIGHTBLUE_REGION_ID: self.lightBlueProximityLabel,
+                              LIGHTGREEN_REGION_ID: self.lightGreenProximityLabel
                               }.mutableCopy;
     
 }
