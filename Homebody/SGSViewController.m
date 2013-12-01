@@ -30,7 +30,11 @@
 #define LIGHTGREEN_MAJOR 18709
 #define LIGHTGREEN_MINOR 26469
 
-@interface SGSViewController () <CLLocationManagerDelegate>
+@interface SGSViewController () <CLLocationManagerDelegate> {
+    NSTimer* _timer;
+    BOOL _currentlyOutsideMultiRegion;
+    BOOL _firstUpdate;
+}
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSDate *timeEnteredMultiRegionLocation;
@@ -39,6 +43,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *purpleProximityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lightBlueProximityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *lightGreenProximityLabel;
+@property (weak, nonatomic) IBOutlet UILabel *enteredLabel;
+@property (weak, nonatomic) IBOutlet UILabel *exitedLabel;
 
 @property (strong, nonatomic) NSMutableDictionary *regionsAtThisLocation;
 @property (strong, nonatomic) NSMutableDictionary *labelsForRegions;
@@ -49,7 +55,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    _firstUpdate = YES;
+    
+    _timer = [NSTimer scheduledTimerWithTimeInterval:2.0
+                                     target:self
+                                   selector:@selector(updateUI)
+                                   userInfo:nil
+                                    repeats:YES];
+    
+    
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
@@ -91,6 +105,22 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void) updateUI {
+    if (self.timeExitedMultiRegionLocation) {
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.timeExitedMultiRegionLocation];
+        self.exitedLabel.text = [NSString stringWithFormat:@"%f", interval/60.0];
+    } else {
+        self.exitedLabel.text = @"Inside";
+    }
+    if (self.timeEnteredMultiRegionLocation) {
+        NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:self.timeEnteredMultiRegionLocation];
+        self.enteredLabel.text = [NSString stringWithFormat:@"%f", interval/60.0];
+    } else {
+        self.enteredLabel.text = @"Outside";
+    }
+
 }
 
 - (void)setupRegionWithUUIDString:(NSString*) uuidString
@@ -152,49 +182,53 @@
         }
     }
     
-    if (outsideMultiRegion) {
-        [self exitedMultiRegionLocation];
-        
-        if (self.timeEnteredMultiRegionLocation) {
-            NSTimeInterval interval = [self.timeExitedMultiRegionLocation timeIntervalSinceDate:self.timeEnteredMultiRegionLocation];
+    if (_firstUpdate || (outsideMultiRegion != _currentlyOutsideMultiRegion)) {
+        _firstUpdate = NO;
+        if (outsideMultiRegion){
+            [self exitedMultiRegionLocation];
             
+            if (self.timeEnteredMultiRegionLocation) {
+                NSTimeInterval interval = [self.timeExitedMultiRegionLocation timeIntervalSinceDate:self.timeEnteredMultiRegionLocation];
+                
 #ifdef kAPPTOKEN_STATHAT
-            NSDictionary *parameters = @{
-                                         @"ezkey": kAPPTOKEN_STATHAT,
-                                         @"stat": @"Minutes Spent At Home",
-                                         @"count": @(interval/60.0)
-                                         };
-            [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
-                                               parameters:parameters
-                                                  success:nil
-                                                  failure:nil];
+                NSDictionary *parameters = @{
+                                             @"ezkey": kAPPTOKEN_STATHAT,
+                                             @"stat": @"Minutes Spent At Home",
+                                             @"count": @(interval/60.0)
+                                             };
+                [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
+                                                   parameters:parameters
+                                                      success:nil
+                                                      failure:nil];
 #endif
-
-            [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Inside Multiregion: %f", interval/60.0]];
-
-            self.timeEnteredMultiRegionLocation = nil;
-        }
-    } else {
-        [self enteredMultiRegionLocation];
-        if (self.timeExitedMultiRegionLocation) {
-            NSTimeInterval interval = [self.timeEnteredMultiRegionLocation timeIntervalSinceDate:self.timeExitedMultiRegionLocation];
-            
+                
+                [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Inside Multiregion: %f", interval/60.0]];
+                
+                self.timeEnteredMultiRegionLocation = nil;
+            }
+        } else {
+            [self enteredMultiRegionLocation];
+            if (self.timeExitedMultiRegionLocation) {
+                NSTimeInterval interval = [self.timeEnteredMultiRegionLocation timeIntervalSinceDate:self.timeExitedMultiRegionLocation];
+                
 #ifdef kAPPTOKEN_STATHAT
-            NSDictionary *parameters = @{
-                                         @"ezkey": kAPPTOKEN_STATHAT,
-                                         @"stat": @"Minutes Spent Away From Home",
-                                         @"count": @(interval/60.0)
-                                         };
-            [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
-                                               parameters:parameters
-                                                  success:nil
-                                                  failure:nil];
+                NSDictionary *parameters = @{
+                                             @"ezkey": kAPPTOKEN_STATHAT,
+                                             @"stat": @"Minutes Spent Away From Home",
+                                             @"count": @(interval/60.0)
+                                             };
+                [[AFHTTPRequestOperationManager manager] POST:@"http://api.stathat.com/ez"
+                                                   parameters:parameters
+                                                      success:nil
+                                                      failure:nil];
 #endif
-
-            [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Outside Multiregion: %f", interval/60.0]];
-            
-            self.timeExitedMultiRegionLocation = nil;
+                
+                [self sendLocalNotificationWithMessage:[NSString stringWithFormat:@"Mins Outside Multiregion: %f", interval/60.0]];
+                
+                self.timeExitedMultiRegionLocation = nil;
+            }
         }
+        _currentlyOutsideMultiRegion = outsideMultiRegion;
     }
 }
 -(BOOL) isPartOfMultiRegionLocationWithIdentifier:(NSString*) identifier {
